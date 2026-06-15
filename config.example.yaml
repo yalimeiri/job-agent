@@ -1,0 +1,59 @@
+# Job Search & Auto-Apply Agent — example configuration.
+# Copy to config.yaml and fill in. ${VARS} are expanded from the environment.
+
+agent:
+  interval: 4h          # how often the cycle runs in daemon mode
+  max_concurrent: 3     # bounded concurrency for parallel scrapers
+  dry_run: true         # set false to submit real applications
+  log_level: info       # debug | info | warn | error
+
+profile:
+  full_name: "Your Name"
+  email: "you@example.com"
+  phone: "+972-50-000-0000"
+  linkedin_url: "https://linkedin.com/in/you"
+  cv_path: "./assets/cv.pdf"
+  target_roles: ["Full Stack Developer", "Full Stack Engineer", "Software Engineer"]
+  skills: ["React", "Node.js", "TypeScript", "Go", "PostgreSQL", "AWS", "Docker"]
+  years_experience: 5
+  summary: "Full stack developer with 5 years building web applications..."
+
+sources:
+  - name: jsearch_fullstack
+    type: jsearch
+    enabled: true
+    extra:
+      api_key: "${RAPIDAPI_KEY}"
+      queries: "Full Stack Developer in Israel|Full Stack Engineer in Tel Aviv|Fullstack Developer remote"
+      date_posted: "3days"      # today | 3days | week | month
+      remote_only: "false"
+      num_pages: "1"
+
+  # Example career-page scraper (disabled by default).
+  - name: acme_careers
+    type: career_page
+    enabled: false
+    extra:
+      url: "https://acme.example.com/careers"
+      job_selector: ".job-listing"
+      title_selector: ".job-title"
+      location_selector: ".job-location"
+      link_selector: "a"
+      base_url: "https://acme.example.com"
+
+matching:
+  provider: anthropic
+  api_key: "${ANTHROPIC_API_KEY}"
+  model: "claude-haiku-4-5-20251001"
+  cover_letter_model: "claude-sonnet-4-6"
+  min_score: 0.6
+  auto_apply_above: 0.85
+
+notifier:
+  type: telegram
+  config:
+    bot_token: "${TELEGRAM_BOT_TOKEN}"
+    chat_id: "${TELEGRAM_CHAT_ID}"
+
+database:
+  dsn: "${DATABASE_URL}"   # postgres://user:pass@host:5432/jobagent?sslmode=disable

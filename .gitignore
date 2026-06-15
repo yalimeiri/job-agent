@@ -1,0 +1,17 @@
+# Binaries
+/bin/
+*.exe
+job-agent
+
+# Local config & secrets
+config.yaml
+.env
+
+# Runtime artifacts
+/screenshots/
+/assets/cv.pdf
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
