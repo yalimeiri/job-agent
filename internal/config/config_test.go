@@ -11,7 +11,7 @@ import (
 // mutate one field to assert the corresponding failure.
 func baseValid() *Config {
 	c := &Config{
-		Agent: AgentConfig{Interval: time.Hour, MaxConcurrent: 2, LogLevel: "info"},
+		Agent:   AgentConfig{Interval: time.Hour, MaxConcurrent: 2, LogLevel: "info"},
 		Profile: ProfileConfig{FullName: "Jane Dev", Email: "jane@example.com"},
 		Sources: []SourceConfig{{Name: "s1", Type: "jsearch", Enabled: true}},
 		Matching: MatchingConfig{

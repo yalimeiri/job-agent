@@ -28,14 +28,14 @@ const (
 // ClaudeMatcher scores jobs with a fast model and, for relevant jobs, drafts a
 // tailored cover letter with a stronger model.
 type ClaudeMatcher struct {
-	apiKey          string
-	scoreModel      string
-	coverModel      string
-	minScore        float64
-	baseURL         string // overridable for tests
-	client          *http.Client
-	limiter         *ratelimit.Limiter
-	log             *slog.Logger
+	apiKey     string
+	scoreModel string
+	coverModel string
+	minScore   float64
+	baseURL    string // overridable for tests
+	client     *http.Client
+	limiter    *ratelimit.Limiter
+	log        *slog.Logger
 }
 
 // Option customises a ClaudeMatcher.

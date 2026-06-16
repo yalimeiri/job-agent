@@ -28,16 +28,16 @@ const (
 // JSearchScraper queries the JSearch RapidAPI (aggregates LinkedIn, Indeed,
 // Glassdoor, ZipRecruiter) for one or more search queries.
 type JSearchScraper struct {
-	name        string
-	apiKey      string
-	queries     []string
-	datePosted  string
-	remoteOnly  bool
-	numPages    int
-	baseURL     string // overridable for tests; defaults to jsearchBaseURL
-	client      *http.Client
-	limiter     *ratelimit.Limiter
-	log         *slog.Logger
+	name       string
+	apiKey     string
+	queries    []string
+	datePosted string
+	remoteOnly bool
+	numPages   int
+	baseURL    string // overridable for tests; defaults to jsearchBaseURL
+	client     *http.Client
+	limiter    *ratelimit.Limiter
+	log        *slog.Logger
 }
 
 // newJSearchScraper is the Factory for "jsearch" sources.
@@ -186,23 +186,23 @@ func (s *JSearchScraper) searchQuery(ctx context.Context, query string) ([]*mode
 type jsearchResponse struct {
 	Status string `json:"status"`
 	Data   []struct {
-		JobID                 string   `json:"job_id"`
-		EmployerName          string   `json:"employer_name"`
-		JobTitle              string   `json:"job_title"`
-		JobDescription        string   `json:"job_description"`
-		JobApplyLink          string   `json:"job_apply_link"`
-		JobCity               string   `json:"job_city"`
-		JobState              string   `json:"job_state"`
-		JobCountry            string   `json:"job_country"`
-		JobEmploymentType     string   `json:"job_employment_type"`
-		JobIsRemote           bool     `json:"job_is_remote"`
-		JobPostedAtDatetimeUTC string  `json:"job_posted_at_datetime_utc"`
-		JobMinSalary          *float64 `json:"job_min_salary"`
-		JobMaxSalary          *float64 `json:"job_max_salary"`
-		JobSalaryCurrency     string   `json:"job_salary_currency"`
-		JobRequiredSkills     []string `json:"job_required_skills"`
-		JobHighlights         struct {
-			Qualifications []string `json:"Qualifications"`
+		JobID                  string   `json:"job_id"`
+		EmployerName           string   `json:"employer_name"`
+		JobTitle               string   `json:"job_title"`
+		JobDescription         string   `json:"job_description"`
+		JobApplyLink           string   `json:"job_apply_link"`
+		JobCity                string   `json:"job_city"`
+		JobState               string   `json:"job_state"`
+		JobCountry             string   `json:"job_country"`
+		JobEmploymentType      string   `json:"job_employment_type"`
+		JobIsRemote            bool     `json:"job_is_remote"`
+		JobPostedAtDatetimeUTC string   `json:"job_posted_at_datetime_utc"`
+		JobMinSalary           *float64 `json:"job_min_salary"`
+		JobMaxSalary           *float64 `json:"job_max_salary"`
+		JobSalaryCurrency      string   `json:"job_salary_currency"`
+		JobRequiredSkills      []string `json:"job_required_skills"`
+		JobHighlights          struct {
+			Qualifications   []string `json:"Qualifications"`
 			Responsibilities []string `json:"Responsibilities"`
 		} `json:"job_highlights"`
 	} `json:"data"`

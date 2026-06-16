@@ -53,12 +53,12 @@ type SourceConfig struct {
 
 // MatchingConfig configures the Claude-backed matcher.
 type MatchingConfig struct {
-	Provider        string  `yaml:"provider"`
-	APIKey          string  `yaml:"api_key"`
-	Model           string  `yaml:"model"`
-	CoverLetterModel string `yaml:"cover_letter_model"`
-	MinScore        float64 `yaml:"min_score"`
-	AutoApplyAbove  float64 `yaml:"auto_apply_above"`
+	Provider         string  `yaml:"provider"`
+	APIKey           string  `yaml:"api_key"`
+	Model            string  `yaml:"model"`
+	CoverLetterModel string  `yaml:"cover_letter_model"`
+	MinScore         float64 `yaml:"min_score"`
+	AutoApplyAbove   float64 `yaml:"auto_apply_above"`
 }
 
 // NotifierConfig configures notifications.
