@@ -38,6 +38,8 @@ func run() error {
 		migrationsDir = flag.String("migrations", "./migrations", "path to migrations directory")
 		once          = flag.Bool("once", false, "run a single cycle and exit")
 		skipMigrate   = flag.Bool("skip-migrate", false, "do not run migrations on startup")
+		migrateOnly   = flag.Bool("migrate-only", false, "run up migrations and exit")
+		migrateDown   = flag.Bool("migrate-down", false, "roll back all migrations and exit")
 		dryRun        = flag.Bool("dry-run", false, "force dry-run mode (overrides config)")
 	)
 	flag.Parse()
@@ -52,6 +54,16 @@ func run() error {
 
 	log := newLogger(cfg.Agent.LogLevel)
 	slog.SetDefault(log)
+
+	// Migration-only modes for `make migrate-up` / `make migrate-down`.
+	if *migrateDown {
+		log.Info("rolling back migrations", "dir", *migrationsDir)
+		return store.MigrateDown(cfg.Database.DSN, *migrationsDir)
+	}
+	if *migrateOnly {
+		log.Info("running migrations", "dir", *migrationsDir)
+		return store.Migrate(cfg.Database.DSN, *migrationsDir)
+	}
 
 	// Migrations first: a fatal error on startup is acceptable per the spec.
 	if !*skipMigrate {

@@ -388,7 +388,11 @@ func (e *Engine) ensureBrowser() (*rod.Browser, error) {
 		Set("no-sandbox").
 		Set("disable-dev-shm-usage").
 		Set("disable-gpu")
-	if path, ok := launcher.LookPath(); ok {
+	// Prefer an explicitly configured browser binary (set in the container),
+	// otherwise fall back to auto-detection on PATH.
+	if bin := os.Getenv("ROD_BROWSER_BIN"); bin != "" {
+		l = l.Bin(bin)
+	} else if path, ok := launcher.LookPath(); ok {
 		l = l.Bin(path)
 	}
 	controlURL, err := l.Launch()
