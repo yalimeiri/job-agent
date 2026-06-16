@@ -75,6 +75,13 @@ func newJSearchScraper(cfg config.SourceConfig, deps Deps) (Scraper, error) {
 		}
 	}
 
+	// base_url override: lets you point at a mock, a self-hosted proxy, or an
+	// alternate region when the default RapidAPI gateway is unreachable.
+	baseURL := jsearchBaseURL
+	if v := cfg.Extra["base_url"]; v != "" {
+		baseURL = v
+	}
+
 	// One limiter per source name, enforcing the monthly budget.
 	lim := deps.Limiters.Get(cfg.Name)
 	if lim == nil {
@@ -89,7 +96,7 @@ func newJSearchScraper(cfg config.SourceConfig, deps Deps) (Scraper, error) {
 		datePosted: datePosted,
 		remoteOnly: strings.EqualFold(cfg.Extra["remote_only"], "true"),
 		numPages:   numPages,
-		baseURL:    jsearchBaseURL,
+		baseURL:    baseURL,
 		client:     deps.HTTPClient,
 		limiter:    lim,
 		log:        deps.Logger.With("scraper", cfg.Name, "type", "jsearch"),

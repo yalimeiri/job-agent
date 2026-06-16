@@ -24,6 +24,7 @@ func main() {
 	query := flag.String("query", "Full Stack Developer in Israel", "search query (pipe-separated for multiple)")
 	datePosted := flag.String("date", "3days", "date_posted: today|3days|week|month")
 	remote := flag.Bool("remote", false, "remote jobs only")
+	baseURL := flag.String("url", "", "override JSearch base URL (for a mock or self-hosted proxy)")
 	flag.Parse()
 
 	if *key == "" {
@@ -43,6 +44,7 @@ func main() {
 			"queries":     *query,
 			"date_posted": *datePosted,
 			"remote_only": fmt.Sprintf("%t", *remote),
+			"base_url":    *baseURL,
 		},
 	}, scraper.Deps{Limiters: ratelimit.NewRegistry(), Logger: log})
 	if err != nil {
