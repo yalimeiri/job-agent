@@ -93,7 +93,8 @@ func TestIntegrationJobLifecycle(t *testing.T) {
 	if err != nil || len(matched) != 1 {
 		t.Fatalf("ListByStatus(matched) = %d jobs, %v; want 1", len(matched), err)
 	}
-	if matched[0].MatchScore != 0.92 || matched[0].CoverLetter == "" {
+	// match_score is SQL REAL (float32), so compare with a tolerance.
+	if d := matched[0].MatchScore - 0.92; d > 1e-6 || d < -1e-6 || matched[0].CoverLetter == "" {
 		t.Errorf("match not persisted: %+v", matched[0])
 	}
 
