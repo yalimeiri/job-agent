@@ -5,6 +5,8 @@ package matcher
 
 import (
 	"context"
+	"fmt"
+	"log/slog"
 
 	"github.com/yalimeiri/job-agent/internal/config"
 	"github.com/yalimeiri/job-agent/internal/models"
@@ -13,4 +15,18 @@ import (
 // Matcher evaluates job relevance against the user profile.
 type Matcher interface {
 	Match(ctx context.Context, job *models.Job, profile config.ProfileConfig) (*models.MatchResult, error)
+}
+
+// New builds the matcher backend selected by cfg.Provider:
+//   - "anthropic"                -> Claude (api.anthropic.com)
+//   - "groq" / "openai_compatible" -> any OpenAI-compatible chat API
+func New(cfg config.MatchingConfig, log *slog.Logger) (Matcher, error) {
+	switch cfg.Provider {
+	case "groq", "openai_compatible":
+		return NewOpenAICompatible(cfg, log)
+	case "anthropic", "":
+		return NewClaude(cfg, log)
+	default:
+		return nil, fmt.Errorf("unknown matching provider %q", cfg.Provider)
+	}
 }

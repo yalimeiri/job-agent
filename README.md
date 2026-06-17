@@ -117,8 +117,10 @@ set `dry_run: false` (or omit `-dry-run`) and re-run.
 | `agent.log_level` | `debug` / `info` / `warn` / `error` |
 | `profile.*` | Your identity, target roles, skills, CV path, summary |
 | `sources[]` | Scraper sources; `type` is `jsearch` or `career_page` |
-| `matching.model` | Claude model for scoring (`claude-haiku-4-5-20251001`) |
-| `matching.cover_letter_model` | Claude model for cover letters (`claude-sonnet-4-6`) |
+| `matching.provider` | Matcher backend: `groq` (free, default in config), `anthropic`, or `openai_compatible` |
+| `matching.base_url` | OpenAI-compatible endpoint (e.g. `https://api.groq.com/openai/v1`); auto-set for `groq` |
+| `matching.model` | Scoring model (Groq: `llama-3.3-70b-versatile`; Claude: `claude-haiku-4-5-20251001`) |
+| `matching.cover_letter_model` | Cover-letter model (defaults to the scoring model for Groq) |
 | `matching.min_score` | At/above this → `matched`, below → `rejected` |
 | `matching.auto_apply_above` | At/above this a matched job is auto-applied |
 | `notifier.type` | `telegram` (anything else disables notifications) |

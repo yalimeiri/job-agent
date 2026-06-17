@@ -51,10 +51,13 @@ type SourceConfig struct {
 	Extra   map[string]string `yaml:"extra"`
 }
 
-// MatchingConfig configures the Claude-backed matcher.
+// MatchingConfig configures the matcher. Provider selects the backend:
+// "anthropic" (Claude) or "openai_compatible"/"groq" (any OpenAI-compatible
+// chat API: Groq, Gemini's compat endpoint, OpenRouter, local Ollama, ...).
 type MatchingConfig struct {
 	Provider         string  `yaml:"provider"`
 	APIKey           string  `yaml:"api_key"`
+	BaseURL          string  `yaml:"base_url"` // OpenAI-compatible base, e.g. https://api.groq.com/openai/v1
 	Model            string  `yaml:"model"`
 	CoverLetterModel string  `yaml:"cover_letter_model"`
 	MinScore         float64 `yaml:"min_score"`
@@ -105,20 +108,41 @@ func (c *Config) applyDefaults() {
 	if c.Agent.LogLevel == "" {
 		c.Agent.LogLevel = "info"
 	}
-	if c.Matching.Model == "" {
-		c.Matching.Model = "claude-haiku-4-5-20251001"
+	if c.Matching.Provider == "" {
+		c.Matching.Provider = "anthropic"
 	}
-	if c.Matching.CoverLetterModel == "" {
-		c.Matching.CoverLetterModel = "claude-sonnet-4-6"
+	// Provider-specific model/base_url defaults.
+	switch c.Matching.Provider {
+	case "groq":
+		if c.Matching.BaseURL == "" {
+			c.Matching.BaseURL = "https://api.groq.com/openai/v1"
+		}
+		if c.Matching.Model == "" {
+			c.Matching.Model = "llama-3.3-70b-versatile"
+		}
+		if c.Matching.CoverLetterModel == "" {
+			c.Matching.CoverLetterModel = c.Matching.Model
+		}
+	case "openai_compatible":
+		if c.Matching.Model == "" {
+			c.Matching.Model = "llama-3.3-70b-versatile"
+		}
+		if c.Matching.CoverLetterModel == "" {
+			c.Matching.CoverLetterModel = c.Matching.Model
+		}
+	default: // anthropic
+		if c.Matching.Model == "" {
+			c.Matching.Model = "claude-haiku-4-5-20251001"
+		}
+		if c.Matching.CoverLetterModel == "" {
+			c.Matching.CoverLetterModel = "claude-sonnet-4-6"
+		}
 	}
 	if c.Matching.MinScore == 0 {
 		c.Matching.MinScore = 0.6
 	}
 	if c.Matching.AutoApplyAbove == 0 {
 		c.Matching.AutoApplyAbove = 0.85
-	}
-	if c.Matching.Provider == "" {
-		c.Matching.Provider = "anthropic"
 	}
 }
 
@@ -158,6 +182,14 @@ func (c *Config) Validate() error {
 	}
 	if c.Matching.APIKey == "" {
 		errs = append(errs, "matching.api_key is required")
+	}
+	switch c.Matching.Provider {
+	case "", "anthropic", "groq", "openai_compatible":
+		if c.Matching.Provider == "openai_compatible" && c.Matching.BaseURL == "" {
+			errs = append(errs, "matching.base_url is required for provider openai_compatible")
+		}
+	default:
+		errs = append(errs, fmt.Sprintf("matching.provider %q is invalid (anthropic|groq|openai_compatible)", c.Matching.Provider))
 	}
 
 	enabled := 0

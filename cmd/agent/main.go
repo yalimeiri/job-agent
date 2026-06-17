@@ -99,7 +99,7 @@ func run() error {
 	}
 	log.Info("scrapers ready", "count", len(scrapers))
 
-	mt, err := matcher.NewClaude(cfg.Matching, log)
+	mt, err := matcher.New(cfg.Matching, log)
 	if err != nil {
 		return fmt.Errorf("build matcher: %w", err)
 	}
