@@ -24,8 +24,8 @@ sources:
     enabled: true
     extra:
       api_key: "${RAPIDAPI_KEY}"
-      queries: "Full Stack Developer in Israel|Full Stack Engineer in Tel Aviv"
-      date_posted: "week"
+      queries: "Full Stack Developer in Israel|Software Engineer in Israel|Developer in Tel Aviv"
+      date_posted: "month"
       remote_only: "false"
       num_pages: "1"
 
