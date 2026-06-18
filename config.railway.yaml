@@ -1,31 +1,58 @@
 # Railway deployment config. SAFE TO COMMIT — all secrets come from ${ENV}
-# variables set in the Railway dashboard. Edit the profile block to your real
-# (non-secret) details before deploying.
+# variables set in the Railway dashboard.
 agent:
-  interval: 4h
+  interval: 24h          # once daily keeps JSearch under the 200/month free cap
   max_concurrent: 3
-  dry_run: true          # KEEP true for the first deploy; flip to false once verified
+  dry_run: true          # KEEP true until verified; flip to false to apply for real
   log_level: info
 
 profile:
-  full_name: "Your Name"
-  email: "you@example.com"
-  phone: "+972-50-000-0000"
-  linkedin_url: "https://linkedin.com/in/you"
+  full_name: "Yali Meiri"
+  email: "meiriyali002@gmail.com"
+  phone: "+972-52-652-1466"
+  linkedin_url: ""        # add your LinkedIn URL if you want it auto-filled on Lever forms
   cv_path: "./assets/cv.pdf"
-  target_roles: ["Full Stack Developer", "Full Stack Engineer", "Software Engineer"]
-  skills: ["React", "Node.js", "TypeScript", "Go", "PostgreSQL", "AWS", "Docker"]
-  years_experience: 5
-  summary: "Full stack developer with 5 years building web applications with React, Node.js and Go."
+  target_roles:
+    - "Junior Software Engineer"
+    - "Junior Software Developer"
+    - "Software Engineering Intern"
+    - "Student Software Engineer"
+    - "Junior Backend Developer"
+    - "Junior Full Stack Developer"
+    - "Junior QA Automation Engineer"
+  skills:
+    - "Java"
+    - "Spring Boot"
+    - "C++"
+    - "C"
+    - "Python"
+    - "JavaScript"
+    - "SQL"
+    - "PostgreSQL"
+    - "MongoDB"
+    - "Docker"
+    - "Kubernetes"
+    - "Go"
+    - "Google Cloud"
+    - "AWS"
+    - "Django"
+    - "Git"
+  years_experience: 0
+  summary: >
+    Third-year Computer Science student at Ben-Gurion University (graduating March 2027),
+    currently an automation intern at RAD building test frameworks and Spring Boot REST APIs
+    for microservices. Hands-on with Java, C++, Python, JavaScript and SQL, plus Docker,
+    Kubernetes, Go and cloud (GCP/AWS). Built a production full-stack LMS (Django/PostgreSQL)
+    and low-level security research in C/C++. Seeking junior or student software engineering roles.
 
 sources:
-  - name: jsearch_fullstack
+  - name: jsearch_junior
     type: jsearch
     enabled: true
     extra:
       api_key: "${RAPIDAPI_KEY}"
-      queries: "Full Stack Developer in Israel|Software Engineer in Israel|Developer in Tel Aviv"
-      date_posted: "month"
+      queries: "Junior Software Engineer in Israel|Student Software Engineer in Israel|Software Engineering Intern in Israel|Junior Backend Developer in Israel|Junior Full Stack Developer in Israel|Junior QA Automation Engineer in Israel"
+      date_posted: "week"
       remote_only: "false"
       num_pages: "1"
 
