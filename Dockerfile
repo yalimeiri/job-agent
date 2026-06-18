@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- build stage -----------------------------------------------------------
-FROM golang:1.22-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /src
 RUN apk add --no-cache git ca-certificates
@@ -35,6 +35,7 @@ COPY --from=builder /out/agent /app/agent
 COPY --from=builder /out/test-scraper /app/test-scraper
 COPY migrations /app/migrations
 COPY config.example.yaml /app/config.example.yaml
+COPY config.railway.yaml /app/config.railway.yaml
 
 # Screenshots directory writable by the non-root user.
 RUN mkdir -p /app/screenshots /app/assets && chown -R agent:agent /app

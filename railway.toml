@@ -1,0 +1,10 @@
+# Railway build/deploy config. Railway builds the Dockerfile and runs the agent
+# as a long-running daemon (first cycle immediately, then every agent.interval).
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "/app/agent -config /app/config.railway.yaml -migrations /app/migrations"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10

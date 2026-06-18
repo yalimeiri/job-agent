@@ -1,0 +1,12 @@
+# Keep secrets and local cruft out of the build context/image.
+.git
+.gitignore
+.env
+.env.example
+config.yaml
+config.localtest.yaml
+screenshots/
+bin/
+*.exe
+README.md
+DEPLOY.md

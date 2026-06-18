@@ -1,0 +1,48 @@
+# Railway deployment config. SAFE TO COMMIT — all secrets come from ${ENV}
+# variables set in the Railway dashboard. Edit the profile block to your real
+# (non-secret) details before deploying.
+agent:
+  interval: 4h
+  max_concurrent: 3
+  dry_run: true          # KEEP true for the first deploy; flip to false once verified
+  log_level: info
+
+profile:
+  full_name: "Your Name"
+  email: "you@example.com"
+  phone: "+972-50-000-0000"
+  linkedin_url: "https://linkedin.com/in/you"
+  cv_path: "./assets/cv.pdf"
+  target_roles: ["Full Stack Developer", "Full Stack Engineer", "Software Engineer"]
+  skills: ["React", "Node.js", "TypeScript", "Go", "PostgreSQL", "AWS", "Docker"]
+  years_experience: 5
+  summary: "Full stack developer with 5 years building web applications with React, Node.js and Go."
+
+sources:
+  - name: jsearch_fullstack
+    type: jsearch
+    enabled: true
+    extra:
+      api_key: "${RAPIDAPI_KEY}"
+      queries: "Full Stack Developer in Israel|Full Stack Engineer in Tel Aviv"
+      date_posted: "week"
+      remote_only: "false"
+      num_pages: "1"
+
+matching:
+  provider: groq
+  api_key: "${GROQ_API_KEY}"
+  base_url: "https://api.groq.com/openai/v1"
+  model: "llama-3.3-70b-versatile"
+  cover_letter_model: "llama-3.3-70b-versatile"
+  min_score: 0.6
+  auto_apply_above: 0.85
+
+notifier:
+  type: telegram          # set TELEGRAM_* vars to enable; otherwise notifications are skipped
+  config:
+    bot_token: "${TELEGRAM_BOT_TOKEN}"
+    chat_id: "${TELEGRAM_CHAT_ID}"
+
+database:
+  dsn: "${DATABASE_URL}"   # Railway Postgres provides this

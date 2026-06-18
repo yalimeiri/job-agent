@@ -5,6 +5,7 @@ job-agent
 
 # Local config & secrets
 config.yaml
+config.localtest.yaml
 .env
 
 # Runtime artifacts
