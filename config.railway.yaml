@@ -19,7 +19,6 @@ profile:
     - "Student Software Engineer"
     - "Junior Backend Developer"
     - "Junior Full Stack Developer"
-    - "Junior QA Automation Engineer"
   skills:
     - "Java"
     - "Spring Boot"
@@ -51,7 +50,7 @@ sources:
     enabled: true
     extra:
       api_key: "${RAPIDAPI_KEY}"
-      queries: "Junior Software Engineer in Israel|Student Software Engineer in Israel|Software Engineering Intern in Israel|Junior Backend Developer in Israel|Junior Full Stack Developer in Israel|Junior QA Automation Engineer in Israel"
+      queries: "Junior Software Engineer in Israel|Student Software Engineer in Israel|Software Engineering Intern in Israel|Junior Backend Developer in Israel|Junior Full Stack Developer in Israel"
       date_posted: "week"
       remote_only: "false"
       num_pages: "1"
