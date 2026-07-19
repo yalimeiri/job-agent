@@ -116,7 +116,7 @@ set `dry_run: false` (or omit `-dry-run`) and re-run.
 | `agent.dry_run` | If true, never submit applications |
 | `agent.log_level` | `debug` / `info` / `warn` / `error` |
 | `profile.*` | Your identity, target roles, skills, CV path, summary |
-| `sources[]` | Scraper sources; `type` is `jsearch` or `career_page` |
+| `sources[]` | Scraper sources; `type` is `jsearch`, `career_page`, or `apify` |
 | `matching.provider` | Matcher backend: `groq` (free, default in config), `anthropic`, or `openai_compatible` |
 | `matching.base_url` | OpenAI-compatible endpoint (e.g. `https://api.groq.com/openai/v1`); auto-set for `groq` |
 | `matching.model` | Scoring model (Groq: `llama-3.3-70b-versatile`; Claude: `claude-haiku-4-5-20251001`) |
@@ -139,6 +139,61 @@ set `dry_run: false` (or omit `-dry-run`) and re-run.
 -migrate-only  apply migrations and exit
 -migrate-down  roll back migrations and exit
 ```
+
+---
+
+## Discovery sources
+
+### JSearch (`type: jsearch`)
+Aggregates LinkedIn/Indeed/Glassdoor/ZipRecruiter via the RapidAPI JSearch
+endpoint. Good general coverage, but historically thin for Israel-specific
+postings.
+
+### Career page (`type: career_page`)
+Generic CSS-selector scraper for a single company's own careers page. No API
+key, no quota.
+
+### Apify (`type: apify`)
+Runs any [Apify Actor](https://apify.com/store) — e.g. a LinkedIn or Indeed
+jobs scraper — and maps its output into jobs. Useful for markets JSearch covers
+poorly. Because different actors return different JSON shapes, field names are
+resolved from a small candidate list per field, with optional overrides:
+
+```yaml
+sources:
+  - name: apify_linkedin
+    type: apify
+    enabled: true
+    extra:
+      api_token: "${APIFY_TOKEN}"
+      actor_id: "bebity/linkedin-jobs-scraper"   # "user/actor" or "user~actor"
+      input_json: |
+        {"title": "Junior Software Engineer", "location": "Israel", "rows": 50}
+      timeout_secs: "180"
+      # Only needed if the actor uses different JSON keys than the defaults
+      # (title, companyName, location, applyUrl/link, descriptionText, id):
+      # field_title: "jobTitle"
+      # field_apply_url: "applyUrl"
+```
+
+Verify an actor before wiring it in:
+```bash
+go run ./cmd/test-apify -token "$APIFY_TOKEN" -actor bebity/linkedin-jobs-scraper \
+  -input '{"title":"Junior Software Engineer","location":"Israel","rows":25}'
+```
+
+**Auto-apply vs. notify-only is automatic and needs no extra config.** The
+scraper's job is only to produce a `Job{ApplyURL: ...}`; the existing platform
+detector (`internal/applier/detector.go`) decides what happens next purely from
+that URL:
+- If the real application link resolves to a supported ATS (Greenhouse, Lever,
+  Ashby, Comeet, SmartRecruiters) — the job is **auto-applied**, exactly like a
+  JSearch-discovered job.
+- If it stays on LinkedIn/Indeed's own apply flow (LinkedIn "Easy Apply",
+  "Indeed Apply") — the job is **notify-only**: you get a Telegram link and
+  apply yourself. This is deliberate — driving a bot through your own logged-in
+  LinkedIn/Indeed session risks your personal account being banned and breaches
+  their Terms of Service, so the applier will never attempt it.
 
 ---
 

@@ -41,6 +41,7 @@ func NewRegistry() *Registry {
 	r := &Registry{factories: map[string]Factory{}}
 	r.Register("jsearch", newJSearchScraper)
 	r.Register("career_page", newCareerPageScraper)
+	r.Register("apify", newApifyScraper)
 	return r
 }
 
